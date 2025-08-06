@@ -1,0 +1,775 @@
+                <div class="result-item" id="multaFgtsRow">
+                    <span class="result-label">Multa FGTS (50%) - mensal:</span>
+                    <span class="result-value positive" id="multaFgts">R$ 0</span>
+                </div>
+                <div class="result-item" id="avisoPrevioRow">
+                    <span class="result-label">Aviso Prévio - mensal:</span>
+                    <span class="result-value positive" id="avisoPrevio">R$ 0</span>
+                </div><!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Custos de Funcionário</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .input-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 2px solid #e9ecef;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1.1em;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .calculate-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.2em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .results {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .scenario {
+            background: #fff;
+            border-radius: 15px;
+            padding: 25px;
+            border: 2px solid #e9ecef;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .scenario:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .scenario-title {
+            font-size: 1.5em;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-align: center;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .cenario-direto {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            color: #333;
+        }
+
+        .cenario-clt {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            color: #333;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+            font-weight: 700;
+            font-size: 1.1em;
+            background: #f8f9fa;
+            margin-top: 10px;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .result-label {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .result-value {
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        .positive {
+            color: #27ae60;
+        }
+
+        .negative {
+            color: #e74c3c;
+        }
+
+        .comparison {
+            grid-column: span 2;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .comparison h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .comparison-value {
+            font-size: 2em;
+            font-weight: 700;
+            margin: 10px 0;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border: 1px solid #bbdefb;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .info-title {
+            font-weight: 700;
+            color: #1565c0;
+            margin-bottom: 10px;
+        }
+
+        .info-text {
+            color: #424242;
+            line-height: 1.6;
+        }
+
+        .breakdown-section {
+            grid-column: span 2;
+            margin-top: 30px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border: 2px solid #e9ecef;
+        }
+        
+        .breakdown-title {
+            font-size: 1.4em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .breakdown-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        .breakdown-column {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .breakdown-column h4 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .breakdown-table {
+            width: 100%;
+            margin-top: 15px;
+        }
+        
+        .breakdown-table th,
+        .breakdown-table td {
+            padding: 8px 12px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .breakdown-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .breakdown-table .highlight {
+            background: #e8f4f8;
+            font-weight: 600;
+        }
+        
+        .breakdown-explanation {
+            grid-column: span 2;
+            margin-top: 20px;
+            padding: 15px;
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            border-radius: 5px;
+            font-size: 0.9em;
+            color: #856404;
+        }
+
+        @media (max-width: 768px) {
+            .results {
+                grid-template-columns: 1fr;
+            }
+            
+            .comparison, .breakdown-section {
+                grid-column: span 1;
+            }
+            
+            .breakdown-content {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💰 Calculadora de Custos</h1>
+        <p class="subtitle">Compare: CLT vs Sem Registro - Escolha do Funcionário</p>
+
+        <div class="input-section">
+            <div class="input-group">
+                <label for="custoEmpresa">💼 Valor que a empresa tem disponível para gastar (R$):</label>
+                <input type="number" id="custoEmpresa" value="5000" min="0" step="100">
+            </div>
+            <div class="input-group">
+                <label style="display: flex; align-items: center; gap: 10px;">
+                    <input type="checkbox" id="considerarDemissao" style="width: auto; transform: scale(1.2);">
+                    <span>⚖️ Considerar custos de possível demissão (Multa FGTS + Aviso Prévio)?</span>
+                </label>
+                <small style="color: #666; margin-top: 5px; display: block;">
+                    * Estes custos só ocorrem se o funcionário for demitido sem justa causa
+                </small>
+            </div>
+            <button class="calculate-btn" onclick="calcular()">🔍 Calcular Cenários</button>
+        </div>
+
+        <div id="resultados" class="results" style="display: none;">
+            <!-- Cenário 1: Contratação Direta -->
+            <div class="scenario">
+                <h3 class="scenario-title cenario-direto">📄 Cenário 1: Sem Registro (Pessoa Física)</h3>
+                <div class="result-item">
+                    <span class="result-label">Custo para empresa:</span>
+                    <span class="result-value" id="custoDirecto">R$ 0</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Valor bruto recebido:</span>
+                    <span class="result-value positive" id="valorBruto">R$ 0</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">(-) Imposto de Renda (carnê-leão):</span>
+                    <span class="result-value negative" id="irSemRegistro">R$ 0</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Valor líquido final:</span>
+                    <span class="result-value positive" id="valorDirecto">R$ 0</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Benefícios/Proteções:</span>
+                    <span class="result-value negative">Nenhum</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Responsabilidades fiscais:</span>
+                    <span class="result-value negative">Carnê-leão mensal</span>
+                </div>
+            </div>
+
+            <!-- Cenário 2: CLT -->
+            <div class="scenario">
+                <h3 class="scenario-title cenario-clt">📋 Cenário 2: Registro CLT</h3>
+                <div class="result-item">
+                    <span class="result-label">Custo total para empresa:</span>
+                    <span class="result-value" id="custoCLT">R$ 0</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Salário bruto:</span>
+                    <span class="result-value" id="salarioBruto">R$ 0</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Salário líquido mensal:</span>
+                    <span class="result-value" id="salarioLiquido">R$ 0</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">13º salário (mensal):</span>
+                    <span class="result-value positive" id="decimoTerceiro">R$ 0</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Férias + 1/3 (mensal):</span>
+                    <span class="result-value positive" id="ferias">R$ 0</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">FGTS (mensal):</span>
+                    <span class="result-value positive" id="fgts">R$ 0</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Total médio mensal:</span>
+                    <span class="result-value positive" id="totalCLT">R$ 0</span>
+                </div>
+            </div>
+
+            <!-- Comparação 1: Valor Líquido Puro -->
+            <div class="comparison">
+                <h3>💰 Comparação 1: Valor Líquido Mensal</h3>
+                <div style="font-size: 0.9em; margin-bottom: 15px; color: #666;">
+                    <em>Salário líquido CLT vs Valor líquido Sem Registro (sem benefícios extras)</em>
+                </div>
+                <div>
+                    <strong>Diferença para o funcionário:</strong>
+                    <div class="comparison-value" id="diferencaImediata">R$ 0</div>
+                    <div id="melhorOpcaoImediata"></div>
+                </div>
+            </div>
+
+            <!-- Comparação 2: Com Benefícios/Reservas -->
+            <div class="comparison">
+                <h3>🎯 Comparação 2: Incluindo Benefícios e Reservas</h3>
+                <div style="font-size: 0.9em; margin-bottom: 15px; color: #666;">
+                    <em>CLT (líquido + benefícios) vs Sem Registro (líquido - reservas equivalentes)</em>
+                </div>
+                <div>
+                    <strong>Diferença para o funcionário:</strong>
+                    <div class="comparison-value" id="diferencaPreparada">R$ 0</div>
+                    <div id="melhorOpcaoPreparada"></div>
+                </div>
+            </div>
+
+            <!-- Breakdown Detalhado -->
+            <div class="breakdown-section">
+                <div class="breakdown-title">📊 Breakdown Detalhado - Comparação Lado a Lado</div>
+                <table class="breakdown-table" style="width: 100%; background: white; border-radius: 10px; overflow: hidden;">
+                    <thead>
+                        <tr style="background: #2c3e50; color: white;">
+                            <th style="width: 40%; padding: 15px;">Item</th>
+                            <th style="width: 30%; padding: 15px;">🏠 Sem Registro</th>
+                            <th style="width: 30%; padding: 15px;">📋 CLT</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>💰 Valor inicial</strong></td>
+                            <td id="breakdown-sem-valor">R$ 0</td>
+                            <td id="breakdown-clt-bruto">R$ 0</td>
+                        </tr>
+                        <tr style="background: #fff3cd;">
+                            <td><strong>📋 Imposto de Renda</strong></td>
+                            <td id="breakdown-sem-ir">R$ 0</td>
+                            <td id="breakdown-clt-ir">R$ 0</td>
+                        </tr>
+                        <tr>
+                            <td><strong>🏥 INSS</strong></td>
+                            <td id="breakdown-sem-inss">R$ 0 (facultativo)</td>
+                            <td id="breakdown-clt-inss">R$ 0 (obrigatório)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>🏦 FGTS (8%)</strong></td>
+                            <td id="breakdown-sem-fgts">R$ 0 (deve guardar)</td>
+                            <td id="breakdown-clt-fgts">R$ 0 (empresa paga)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>🎄 13º salário</strong></td>
+                            <td id="breakdown-sem-13">R$ 0 (deve guardar)</td>
+                            <td id="breakdown-clt-13">R$ 0 (empresa paga)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>🏖️ Férias + 1/3</strong></td>
+                            <td id="breakdown-sem-ferias">R$ 0 (deve guardar)</td>
+                            <td id="breakdown-clt-ferias">R$ 0 (empresa paga)</td>
+                        </tr>
+                        <tr class="highlight" style="background: #e8f4f8; font-weight: bold;">
+                            <td><strong>💸 Total descontos/reservas</strong></td>
+                            <td id="breakdown-sem-total">R$ 0</td>
+                            <td id="breakdown-clt-descontos">R$ 0</td>
+                        </tr>
+                        <tr class="highlight" style="background: #d4edda; font-weight: bold; font-size: 1.1em;">
+                            <td><strong>💵 VALOR FINAL</strong></td>
+                            <td id="breakdown-sem-sobra">R$ 0</td>
+                            <td id="breakdown-clt-total">R$ 0</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+                
+                <div class="breakdown-explanation">
+                    <strong>📝 Explicação:</strong> Para "Sem Registro" poder ter os mesmos benefícios do CLT, deve guardar valores equivalentes. 
+                    <strong>FGTS, benefícios (13º/Férias) e INSS</strong> são os mesmos valores do CLT para comparação justa. 
+                    <strong>INSS</strong> no CLT é obrigatório; no "Sem Registro" é facultativo mas usando o mesmo valor.
+                </div>
+            </div>
+        </div>
+
+        <!-- Detalhes dos Cálculos -->
+        <div id="detalhes" class="info-box" style="display: none;">
+            <div class="info-title">📋 Como são calculados os valores CLT:</div>
+            <div class="info-text">
+                <p><strong>Encargos patronais obrigatórios:</strong></p>
+                <ul style="margin: 10px 0 10px 20px;">
+                    <li>INSS Patronal: 20%</li>
+                    <li>FGTS: 8%</li>
+                    <li>SAT/RAT (Seguro Acidente): 1% a 3% (usado 2%)</li>
+                    <li>Salário Educação: 2,5%</li>
+                    <li>Sistema S (SENAC, SESC, SENAI, SESI): 3,3%</li>
+                    <li>SEBRAE: 0,6%</li>
+                    <li>INCRA: 0,2%</li>
+                </ul>
+                <p><strong>Provisões trabalhistas:</strong></p>
+                <ul style="margin: 10px 0 10px 20px;">
+                    <li>13º salário: 8,33% (1/12)</li>
+                    <li>Férias + 1/3: 11,11% (1/9)</li>
+                </ul>
+                <p><strong>Custos de demissão (opcionais):</strong></p>
+                <ul style="margin: 10px 0 10px 20px;">
+                    <li>Multa FGTS (50%): 4,0% - empresa paga 50%, funcionário recebe 40%, governo 10%</li>
+                    <li>Aviso Prévio: ~2,7% - apenas se demitido sem justa causa</li>
+                </ul>
+                <p><strong>Descontos do funcionário CLT:</strong></p>
+                <ul style="margin: 10px 0 10px 20px;">
+                    <li>INSS: cálculo progressivo (7,5% a 14%)</li>
+                    <li>Imposto de Renda: variável (não aplicado no CLT)</li>
+                </ul>
+                <p><strong>Sem Registro - Pessoa Física:</strong></p>
+                <ul style="margin: 10px 0 10px 20px;">
+                    <li>Imposto de Renda: cálculo progressivo (carnê-leão)</li>
+                    <li>Responsabilidade própria: INSS facultativo</li>
+                </ul>
+                <p style="margin-top: 15px;"><strong>Total de encargos:</strong></p>
+                <ul style="margin: 10px 0 10px 20px;">
+                    <li>Sem custos de demissão: ~63%</li>
+                    <li>Com custos de demissão: ~70% (incluindo multa FGTS 50%)</li>
+                </ul>
+                <p style="margin-top: 10px;"><em>Nota: Este cálculo inclui os principais encargos obrigatórios. Valores podem variar conforme setor, porte da empresa e benefícios adicionais oferecidos.</em></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function formatarMoeda(valor) {
+            return new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            }).format(valor);
+        }
+
+        function calcularINSS(salario) {
+            // Tabela INSS 2024 - Progressiva
+            const faixas = [
+                { min: 0, max: 1412.00, aliquota: 0.075 },
+                { min: 1412.01, max: 2666.68, aliquota: 0.09 },
+                { min: 2666.69, max: 4000.03, aliquota: 0.12 },
+                { min: 4000.04, max: 7786.02, aliquota: 0.14 }
+            ];
+            
+            let inss = 0;
+            let salarioRestante = salario;
+            
+            for (let faixa of faixas) {
+                if (salarioRestante <= 0) break;
+                
+                const valorFaixa = Math.min(salarioRestante, faixa.max - faixa.min + 0.01);
+                if (valorFaixa > 0) {
+                    inss += valorFaixa * faixa.aliquota;
+                    salarioRestante -= valorFaixa;
+                }
+            }
+            
+            return Math.min(inss, 7786.02 * 0.14); // Teto do INSS
+        }
+        
+        function calcularIR(renda) {
+            // Tabela IR 2024 - Progressiva (Pessoa Física)
+            const faixas = [
+                { min: 0, max: 2259.20, aliquota: 0, deducao: 0 },
+                { min: 2259.21, max: 2826.65, aliquota: 0.075, deducao: 169.44 },
+                { min: 2826.66, max: 3751.05, aliquota: 0.15, deducao: 381.44 },
+                { min: 3751.06, max: 4664.68, aliquota: 0.225, deducao: 662.77 },
+                { min: 4664.69, max: Infinity, aliquota: 0.275, deducao: 896.00 }
+            ];
+            
+            for (let faixa of faixas) {
+                if (renda >= faixa.min && renda <= faixa.max) {
+                    return Math.max(0, (renda * faixa.aliquota) - faixa.deducao);
+                }
+            }
+            
+            return 0;
+        }
+
+        function calcular() {
+            const custoEmpresa = parseFloat(document.getElementById('custoEmpresa').value) || 0;
+            const considerarDemissao = document.getElementById('considerarDemissao').checked;
+            
+            if (custoEmpresa <= 0) {
+                alert('Por favor, insira um valor válido para o custo da empresa.');
+                return;
+            }
+
+            // Cenário 1: Sem Registro (Pessoa Física)
+            const valorBrutoSemRegistro = custoEmpresa;
+            const irSemRegistro = calcularIR(valorBrutoSemRegistro);
+            const valorDirecto = valorBrutoSemRegistro - irSemRegistro;
+
+            // Cenário 2: CLT - Cálculos completos
+            // Encargos patronais obrigatórios
+            const inssPatronal = 0.20;
+            const fgts = 0.08;
+            const sat = 0.02; // SAT/RAT médio (1% a 3%)
+            const salarioEducacao = 0.025; // 2,5%
+            const sistemaS = 0.033; // 3,3% (SENAC, SESC, SENAI, SESI)
+            const sebrae = 0.006; // 0,6%
+            const incra = 0.002; // 0,2%
+            
+            // Provisões trabalhistas
+            const decimoTerceiro = 1/12; // 8,33%
+            const ferias = 1/9; // 11,11% (férias + 1/3)
+            
+            // Provisões de demissão (condicionais)
+            const multaFgts = considerarDemissao ? 0.04 : 0; // 4,0% (50% sobre FGTS que a empresa paga)
+            const avisoPrevio = considerarDemissao ? 0.027 : 0; // ~2,7% (estimativa)
+            
+            // Total de encargos patronais
+            const totalEncargos = inssPatronal + fgts + sat + salarioEducacao + sistemaS + 
+                                 sebrae + incra + decimoTerceiro + ferias + multaFgts + avisoPrevio;
+            
+            // Calcular salário bruto a partir do custo total da empresa
+            const salarioBruto = custoEmpresa / (1 + totalEncargos);
+            
+            // Descontos do funcionário CLT (cálculo progressivo)
+            const inssEmpregado = calcularINSS(salarioBruto);
+            const irCLT = calcularIR(salarioBruto); // CLT também paga IR!
+            const salarioLiquido = salarioBruto - inssEmpregado - irCLT;
+            
+            // Benefícios mensais (rateados)
+            const beneficioDecimoTerceiro = salarioBruto * decimoTerceiro;
+            const beneficioFerias = salarioBruto * ferias;
+            const beneficioFGTS = salarioBruto * fgts;
+            const beneficioMultaFGTS = salarioBruto * multaFgts;
+            const beneficioAvisoPrevio = salarioBruto * avisoPrevio;
+            
+            // Total médio mensal que o funcionário recebe/acumula
+            const totalMedioCLT = salarioLiquido + beneficioDecimoTerceiro + beneficioFerias + 
+                                 beneficioFGTS + beneficioMultaFGTS + beneficioAvisoPrevio;
+            
+            // Diferença entre os cenários
+            const diferenca = totalMedioCLT - valorDirecto;
+
+            // Atualizar interface - Cenário Sem Registro
+            document.getElementById('custoDirecto').textContent = formatarMoeda(custoEmpresa);
+            document.getElementById('valorBruto').textContent = formatarMoeda(valorBrutoSemRegistro);
+            document.getElementById('irSemRegistro').textContent = formatarMoeda(irSemRegistro);
+            document.getElementById('valorDirecto').textContent = formatarMoeda(valorDirecto);
+            
+            document.getElementById('custoCLT').textContent = formatarMoeda(custoEmpresa);
+            document.getElementById('salarioBruto').textContent = formatarMoeda(salarioBruto);
+            document.getElementById('salarioLiquido').textContent = formatarMoeda(salarioLiquido);
+            document.getElementById('decimoTerceiro').textContent = formatarMoeda(beneficioDecimoTerceiro);
+            document.getElementById('ferias').textContent = formatarMoeda(beneficioFerias);
+            document.getElementById('fgts').textContent = formatarMoeda(beneficioFGTS);
+            document.getElementById('multaFgts').textContent = formatarMoeda(beneficioMultaFGTS);
+            document.getElementById('avisoPrevio').textContent = formatarMoeda(beneficioAvisoPrevio);
+            
+            // Mostrar/esconder custos de demissão
+            document.getElementById('multaFgtsRow').style.display = considerarDemissao ? 'flex' : 'none';
+            document.getElementById('avisoPrevioRow').style.display = considerarDemissao ? 'flex' : 'none';
+            document.getElementById('totalCLT').textContent = formatarMoeda(totalMedioCLT);
+            
+            // COMPARAÇÃO 1: Valor Líquido Puro (sem benefícios extras)
+            const diferencaImediata = salarioLiquido - valorDirecto; // Líquido CLT vs Líquido Sem Registro
+
+            // COMPARAÇÃO 2: Com benefícios/reservas
+            const fgtsEquivalente = beneficioFGTS; // MESMO valor do CLT
+            const reserva13Equivalente = beneficioDecimoTerceiro; // MESMO valor do CLT  
+            const reservaFeriasEquivalente = beneficioFerias; // MESMO valor do CLT
+            const inssOptional = inssEmpregado; // MESMO valor do CLT para comparação justa
+            
+            // CLT: Salário líquido + benefícios mensais
+            const cltComBeneficios = salarioLiquido + beneficioDecimoTerceiro + beneficioFerias + beneficioFGTS;
+            
+            // Sem Registro: Valor líquido - reservas equivalentes que deve guardar
+            const totalReservasSemRegistro = fgtsEquivalente + reserva13Equivalente + reservaFeriasEquivalente + inssOptional;
+            const valorSemRegistroPreparado = valorDirecto - totalReservasSemRegistro;
+            
+            const diferencaPreparada = cltComBeneficios - valorSemRegistroPreparado;
+
+            // COMPARAÇÃO 1: Valor Imediato
+            document.getElementById('diferencaImediata').textContent = formatarMoeda(Math.abs(diferencaImediata));
+            document.getElementById('diferencaImediata').className = `comparison-value ${diferencaImediata >= 0 ? 'positive' : 'negative'}`;
+            
+            let melhorOpcaoImediata;
+            if (diferencaImediata > 0) {
+                melhorOpcaoImediata = `<span class="positive">✅ CLT oferece mais líquido mensal</span>`;
+            } else if (diferencaImediata < 0) {
+                melhorOpcaoImediata = `<span class="negative">⚠️ Sem registro oferece mais líquido mensal</span>`;
+            } else {
+                melhorOpcaoImediata = `<span>⚖️ Valores líquidos equivalentes</span>`;
+            }
+            document.getElementById('melhorOpcaoImediata').innerHTML = melhorOpcaoImediata;
+
+            // COMPARAÇÃO 2: Com Benefícios
+            document.getElementById('diferencaPreparada').textContent = formatarMoeda(Math.abs(diferencaPreparada));
+            document.getElementById('diferencaPreparada').className = `comparison-value ${diferencaPreparada >= 0 ? 'positive' : 'negative'}`;
+            
+            let melhorOpcaoPreparada;
+            if (diferencaPreparada > 0) {
+                melhorOpcaoPreparada = `<span class="positive">✅ CLT oferece mais valor (com benefícios)</span>`;
+            } else if (diferencaPreparada < 0) {
+                melhorOpcaoPreparada = `<span class="negative">⚠️ Sem registro oferece mais valor (descontando reservas)</span>`;
+            } else {
+                melhorOpcaoPreparada = `<span>⚖️ Valores equivalentes (com benefícios/reservas)</span>`;
+            }
+            document.getElementById('melhorOpcaoPreparada').innerHTML = melhorOpcaoPreparada;
+            
+            // Atualizar breakdown detalhado (mostra cenário "ambos preparados")
+            updateBreakdown(valorBrutoSemRegistro, irSemRegistro, salarioBruto, inssEmpregado, beneficioDecimoTerceiro, beneficioFerias, beneficioFGTS, salarioLiquido, totalMedioCLT, valorSemRegistroPreparado);
+            
+            // Mostrar resultados
+            document.getElementById('resultados').style.display = 'grid';
+            document.getElementById('detalhes').style.display = 'block';
+            
+            // Scroll para os resultados
+            document.getElementById('resultados').scrollIntoView({ 
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+
+        function updateBreakdown(valorBrutoSemRegistro, irSemRegistro, salarioBruto, inssEmpregado, beneficio13, beneficioFerias, beneficioFGTS, salarioLiquido, totalMedioCLT, valorSemRegistroPreparado) {
+            // **IMPORTANTE: Adicionar IR no CLT também!**
+            const irCLT = calcularIR(salarioBruto); // CLT também paga IR sobre salário bruto
+            
+            // **CORREÇÃO IMPORTANTE:** 
+            // FGTS, 13º e Férias devem ser o MESMO VALOR para ambos
+            // Calculados sobre o salário bruto do CLT (não porcentagem do valor bruto sem registro)
+            
+            // Sem Registro - Valores que deve guardar para ter benefícios equivalentes
+            const fgtsEquivalente = beneficioFGTS; // MESMO valor do CLT
+            const reserva13Equivalente = beneficio13; // MESMO valor do CLT  
+            const reservaFeriasEquivalente = beneficioFerias; // MESMO valor do CLT
+            const inssOptional = inssEmpregado; // MESMO valor do CLT para comparação justa
+            
+            const totalGuardarSemRegistro = irSemRegistro + fgtsEquivalente + reserva13Equivalente + reservaFeriasEquivalente + inssOptional;
+            const sobraLiquida = valorBrutoSemRegistro - totalGuardarSemRegistro;
+            
+            // CLT - Total de descontos obrigatórios
+            const totalDescontosCLT = irCLT + inssEmpregado;
+            
+            // Recalcular total CLT considerando IR
+            const salarioLiquidoComIR = salarioBruto - inssEmpregado - irCLT;
+            const totalMedioCLTComIR = salarioLiquidoComIR + beneficio13 + beneficioFerias + beneficioFGTS;
+            
+            // Atualizar valores na tabela lado a lado
+            document.getElementById('breakdown-sem-valor').textContent = formatarMoeda(valorBrutoSemRegistro);
+            document.getElementById('breakdown-clt-bruto').textContent = formatarMoeda(salarioBruto);
+            
+            document.getElementById('breakdown-sem-ir').textContent = formatarMoeda(irSemRegistro);
+            document.getElementById('breakdown-clt-ir').textContent = formatarMoeda(irCLT);
+            
+            document.getElementById('breakdown-sem-inss').textContent = formatarMoeda(inssOptional) + ' (mesmo valor)';
+            document.getElementById('breakdown-clt-inss').textContent = formatarMoeda(inssEmpregado) + ' (obrigatório)';
+            
+            document.getElementById('breakdown-sem-fgts').textContent = formatarMoeda(fgtsEquivalente) + ' (deve guardar)';
+            document.getElementById('breakdown-clt-fgts').textContent = formatarMoeda(beneficioFGTS) + ' (empresa paga)';
+            
+            document.getElementById('breakdown-sem-13').textContent = formatarMoeda(reserva13Equivalente) + ' (deve guardar)';
+            document.getElementById('breakdown-clt-13').textContent = formatarMoeda(beneficio13) + ' (empresa paga)';
+            
+            document.getElementById('breakdown-sem-ferias').textContent = formatarMoeda(reservaFeriasEquivalente) + ' (deve guardar)';
+            document.getElementById('breakdown-clt-ferias').textContent = formatarMoeda(beneficioFerias) + ' (empresa paga)';
+            
+            document.getElementById('breakdown-sem-total').textContent = formatarMoeda(totalGuardarSemRegistro);
+            document.getElementById('breakdown-clt-descontos').textContent = formatarMoeda(totalDescontosCLT);
+            
+            document.getElementById('breakdown-sem-sobra').textContent = formatarMoeda(valorSemRegistroPreparado);
+            document.getElementById('breakdown-clt-total').textContent = formatarMoeda(totalMedioCLTComIR);
+        }
+
+        // Remover cálculo automático - só calcular quando clicar no botão
+        // (código removido para que só calcule ao clicar no botão)
+    </script>
+</body>
+</html>
